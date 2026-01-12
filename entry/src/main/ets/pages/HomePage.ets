@@ -8,17 +8,9 @@ export struct HomePage {
     $r('sys.symbol.star'),
     $r('sys.symbol.eye')
   ];
-  private menuItemColors: Array<string> = [
-    '#FFCC00',
-    '#FF4DD2',
-    '#FF5757',
-    '#00C853',
-    '#2979FF',
-    '#B39DDB'
-  ];
-  @State selectedIndex: number = -1;
-  @State rotationAngle: number = 0;
-  @State expandProgressList: number[] = this.menuItems.map(() => 1);
+  private selectedIndex: number = -1;
+  private rotationAngle: number = 0;
+  private expandProgressList: number[] = this.menuItems.map(() => 1);
   @Consume('pageStack') pageStack: NavPathStack;
 
   calculatePosition(index: number): Position {
@@ -51,22 +43,83 @@ export struct HomePage {
           .textAlign(TextAlign.Center)
 
         Stack() {
-          ForEach(this.menuItems, (item: Resource, index: number) => {
-            ListItem() {
-              SymbolGlyph(item)
-                .width(36)
-                .height(36)
-                .fontWeight(FontWeight.Bold)
-                .borderRadius(50)
-                .fontColor(['#000000'])
-                .backgroundColor(this.menuItemColors[index])
-                .shadow({ radius: 6 })
-                .position(this.calculatePosition(index))
-                .onClick(() => {
-                  this.pageStack.pushPathByName('GamePage', index);
-                })
-            }
-          }, (item: Resource) => item.id.toString())
+          SymbolGlyph(this.menuItems[0])
+            .width(36)
+            .height(36)
+            .fontWeight(FontWeight.Bold)
+            .borderRadius(50)
+            .fontColor(['#000000'])
+            .backgroundColor('#FFCC00')
+            .shadow({ radius: 6 })
+            .position(this.calculatePosition(0))
+            .onClick(() => {
+              this.pageStack.pushPathByName('GamePage', 0)
+            })
+
+          SymbolGlyph(this.menuItems[1])
+            .width(36)
+            .height(36)
+            .fontWeight(FontWeight.Bold)
+            .borderRadius(50)
+            .fontColor(['#000000'])
+            .backgroundColor('#FF4DD2')
+            .shadow({ radius: 6 })
+            .position(this.calculatePosition(1))
+            .onClick(() => {
+              this.pageStack.pushPathByName('GamePage', 1)
+            })
+
+          SymbolGlyph(this.menuItems[2])
+            .width(36)
+            .height(36)
+            .fontWeight(FontWeight.Bold)
+            .fontColor(['#000000'])
+            .borderRadius(50)
+            .backgroundColor('#FF5757')
+            .shadow({ radius: 6 })
+            .position(this.calculatePosition(2))
+            .onClick(() => {
+              this.pageStack.pushPathByName('GamePage', 2)
+            })
+
+          SymbolGlyph(this.menuItems[3])
+            .width(36)
+            .height(36)
+            .fontWeight(FontWeight.Bold)
+            .borderRadius(50)
+            .fontColor(['#000000'])
+            .backgroundColor('#00C853')
+            .shadow({ radius: 6 })
+            .position(this.calculatePosition(3))
+            .onClick(() => {
+              this.pageStack.pushPathByName('GamePage', 3)
+            })
+
+          SymbolGlyph(this.menuItems[4])
+            .width(36)
+            .height(36)
+            .fontWeight(FontWeight.Bold)
+            .borderRadius(50)
+            .fontColor(['#000000'])
+            .backgroundColor('#2979FF')
+            .shadow({ radius: 6 })
+            .position(this.calculatePosition(4))
+            .onClick(() => {
+              this.pageStack.pushPathByName('GamePage', 4)
+            })
+
+          SymbolGlyph(this.menuItems[5])
+            .width(36)
+            .height(36)
+            .fontWeight(FontWeight.Bold)
+            .borderRadius(50)
+            .fontColor(['#000000'])
+            .backgroundColor('#B39DDB')
+            .shadow({ radius: 6 })
+            .position(this.calculatePosition(5))
+            .onClick(() => {
+              this.pageStack.pushPathByName('GamePage', 5)
+            })
         }
         .alignContent(Alignment.Center)
         .height('65%')

@@ -79,7 +79,7 @@ KokologyGame
 
 - Huawei Watch 5
 
-# LICENSE
+# License
 
 **Kokology Game** is distributed under the terms of the MIT License.
 See the [license](/LICENSE) for more information.

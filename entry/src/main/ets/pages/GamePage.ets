@@ -9,7 +9,7 @@ export struct GamePage {
   private viewModel: GameViewModel = new GameViewModel();
   @State currentQuestionList: Array<GameModel> = [];
   @State currentIndex: number = 0;
-  @State selectedAnswer: string = '';
+  private selectedAnswer: string = '';
   @State selectedAnswers: string[] = [];
   private categoryIdTitle: number = 0;
 
@@ -71,22 +71,22 @@ export struct GamePage {
       const categoryId = ctx.pathInfo.param as number;
       this.categoryIdTitle = categoryId;
 
-      if (categoryId == 0) {
+      if (categoryId === 0) {
         this.currentQuestionList =
           this.viewModel.getkokologyQuestionsCategory1();
-      } else if (categoryId == 1) {
+      } else if (categoryId === 1) {
         this.currentQuestionList =
           this.viewModel.getkokologyQuestionsCategory2();
-      } else if (categoryId == 2) {
+      } else if (categoryId === 2) {
         this.currentQuestionList =
           this.viewModel.getkokologyQuestionsCategory3();
-      } else if (categoryId == 3) {
+      } else if (categoryId === 3) {
         this.currentQuestionList =
           this.viewModel.getkokologyQuestionsCategory4();
-      } else if (categoryId == 4) {
+      } else if (categoryId === 4) {
         this.currentQuestionList =
           this.viewModel.getkokologyQuestionsCategory5();
-      } else if (categoryId == 5) {
+      } else if (categoryId === 5) {
         this.currentQuestionList =
           this.viewModel.getkokologyQuestionsCategory6();
       }
