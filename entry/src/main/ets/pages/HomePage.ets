@@ -1,131 +1,128 @@
+import { categoryNames } from '../util/Categories';
+import { HapticFeedback } from '../util/HapticFeedback';
+
+interface MenuData {
+  icon: Resource;
+  color: Resource;
+  name: string | Resource;
+  id: number;
+}
+
 @Component
 export struct HomePage {
-  private menuItems: Resource[] = [
-    $r('sys.symbol.sun'),
-    $r('sys.symbol.face'),
-    $r('sys.symbol.heart'),
-    $r('sys.symbol.leaf'),
-    $r('sys.symbol.star'),
-    $r('sys.symbol.eye')
+  private menuListData: MenuData[] = [
+    {
+      icon: $r('sys.symbol.sun'),
+      color: $r('app.color.category_1'),
+      name: categoryNames[0],
+      id: 0
+    },
+    {
+      icon: $r('sys.symbol.face'),
+      color: $r('app.color.category_2'),
+      name: categoryNames[1],
+      id: 1
+    },
+    {
+      icon: $r('sys.symbol.flower'),
+      color: $r('app.color.category_3'),
+      name: categoryNames[2],
+      id: 2
+    },
+    {
+      icon: $r('sys.symbol.a_lightbulb'),
+      color: $r('app.color.category_4'),
+      name: categoryNames[3],
+      id: 3
+    },
+    {
+      icon: $r('sys.symbol.star'),
+      color: $r('app.color.category_5'),
+      name: categoryNames[4],
+      id: 4
+    },
+    {
+      icon: $r('sys.symbol.eye'),
+      color: $r('app.color.category_6'),
+      name: categoryNames[5],
+      id: 5
+    }
   ];
-  private selectedIndex: number = -1;
-  private rotationAngle: number = 0;
-  private expandProgressList: number[] = this.menuItems.map(() => 1);
   @Consume('pageStack') pageStack: NavPathStack;
-
-  calculatePosition(index: number): Position {
-    const angleStep = 2 * Math.PI / this.menuItems.length;
-    const baseAngle = angleStep * index - Math.PI / 2;
-    const rotatedAngle = baseAngle + (this.rotationAngle * Math.PI / 180);
-    const maxRadius = 48;
-    const radius = maxRadius * this.expandProgressList[index];
-
-    const x = Math.cos(rotatedAngle) * radius;
-    const y = Math.sin(rotatedAngle) * radius;
-
-    return { x: x, y: y };
-  }
+  private scroller: Scroller = new Scroller();
 
   build() {
     NavDestination() {
       Column() {
-        Text('Kokology Game')
-          .fontColor('#FFE082')
-          .fontSize(16)
+        Text($r('app.string.app_name'))
+          .fontColor($r('app.color.primary_text'))
+          .fontSize($r('app.float.title_font_size'))
           .fontWeight(FontWeight.Bolder)
-          .margin({ top: 24 })
+          .margin({ top: 20 })
 
-        Text('Dive into your personality. 6 categories, 5 questions each. Choose one below.')
-          .fontColor('#90CAF9')
-          .fontSize(10)
-          .margin({ top: 10 })
-          .width('80%')
-          .textAlign(TextAlign.Center)
+        List({ space: 12, scroller: this.scroller }) {
+          ListItem() {
+            Column() {
+              Text($r('app.string.home_description'))
+                .fontColor($r('app.color.secondary_text'))
+                .fontSize($r('app.float.small_font_size'))
+                .textAlign(TextAlign.Center)
+                .width('100%')
+                .padding({ left: 20, right: 20, top: 2 })
 
-        Stack() {
-          SymbolGlyph(this.menuItems[0])
-            .width(36)
-            .height(36)
-            .fontWeight(FontWeight.Bold)
-            .borderRadius(50)
-            .fontColor(['#000000'])
-            .backgroundColor('#FFCC00')
-            .shadow({ radius: 6 })
-            .position(this.calculatePosition(0))
-            .onClick(() => {
-              this.pageStack.pushPathByName('GamePage', 0)
-            })
+              Button($r('app.string.view_history'))
+                .height(30)
+                .fontSize(10)
+                .backgroundColor($r('app.color.btn_background_dark'))
+                .margin({ top: 10 })
+                .onClick(() => {
+                  HapticFeedback.playClick();
+                  this.pageStack.pushPathByName('HistoryPage', null);
+                })
+            }
+          }
 
-          SymbolGlyph(this.menuItems[1])
-            .width(36)
-            .height(36)
-            .fontWeight(FontWeight.Bold)
-            .borderRadius(50)
-            .fontColor(['#000000'])
-            .backgroundColor('#FF4DD2')
-            .shadow({ radius: 6 })
-            .position(this.calculatePosition(1))
-            .onClick(() => {
-              this.pageStack.pushPathByName('GamePage', 1)
-            })
+          ForEach(this.menuListData, (item: MenuData) => {
+            ListItem() {
+              Row() {
+                SymbolGlyph(item.icon)
+                  .fontSize(20)
+                  .fontColor([$r('app.color.symbol_color')])
 
-          SymbolGlyph(this.menuItems[2])
-            .width(36)
-            .height(36)
-            .fontWeight(FontWeight.Bold)
-            .fontColor(['#000000'])
-            .borderRadius(50)
-            .backgroundColor('#FF5757')
-            .shadow({ radius: 6 })
-            .position(this.calculatePosition(2))
-            .onClick(() => {
-              this.pageStack.pushPathByName('GamePage', 2)
-            })
+                Text(item.name)
+                  .fontColor($r('app.color.main_text_black'))
+                  .fontSize($r('app.float.button_font_size'))
+                  .fontWeight(FontWeight.Medium)
+                  .margin({ left: 2 })
+              }
+              .width('50%')
+              .height($r('app.float.button_height'))
+              .backgroundColor(item.color)
+              .borderRadius(22)
+              .justifyContent(FlexAlign.Center)
+              .onClick(() => {
+                HapticFeedback.playClick();
+                this.pageStack.pushPathByName('GamePage', item.id)
+              })
+            }
+            .width('100%')
+          }, (item: MenuData) => item.id.toString())
 
-          SymbolGlyph(this.menuItems[3])
-            .width(36)
-            .height(36)
-            .fontWeight(FontWeight.Bold)
-            .borderRadius(50)
-            .fontColor(['#000000'])
-            .backgroundColor('#00C853')
-            .shadow({ radius: 6 })
-            .position(this.calculatePosition(3))
-            .onClick(() => {
-              this.pageStack.pushPathByName('GamePage', 3)
-            })
-
-          SymbolGlyph(this.menuItems[4])
-            .width(36)
-            .height(36)
-            .fontWeight(FontWeight.Bold)
-            .borderRadius(50)
-            .fontColor(['#000000'])
-            .backgroundColor('#2979FF')
-            .shadow({ radius: 6 })
-            .position(this.calculatePosition(4))
-            .onClick(() => {
-              this.pageStack.pushPathByName('GamePage', 4)
-            })
-
-          SymbolGlyph(this.menuItems[5])
-            .width(36)
-            .height(36)
-            .fontWeight(FontWeight.Bold)
-            .borderRadius(50)
-            .fontColor(['#000000'])
-            .backgroundColor('#B39DDB')
-            .shadow({ radius: 6 })
-            .position(this.calculatePosition(5))
-            .onClick(() => {
-              this.pageStack.pushPathByName('GamePage', 5)
-            })
+          ListItem() {
+            Column().height(100).width('100%')
+          }
+          .selectable(false)
         }
-        .alignContent(Alignment.Center)
-        .height('65%')
-        .width('65%')
+        .width('100%')
+        .layoutWeight(1)
+        .edgeEffect(EdgeEffect.Spring)
+        .focusable(true)
+        .defaultFocus(true)
+        .onDigitalCrown((event: CrownEvent) => {
+          this.scroller.scrollBy(0, event.degree * 2.0);
+        })
       }
-      .backgroundColor('#0D0D0D')
+      .backgroundColor($r('app.color.background_black'))
       .height('100%')
       .width('100%')
     }

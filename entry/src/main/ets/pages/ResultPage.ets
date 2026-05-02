@@ -1,7 +1,11 @@
 import ResultModel from '../model/ResultModel';
 import { ResultParam } from '../model/ResultParam';
-import { categories } from '../util/Categories';
+import { categoryNames } from '../util/Categories';
 import { ResultViewModel } from '../viewmodel/ResultViewModel';
+import { HapticFeedback } from '../util/HapticFeedback';
+import { HistoryStore, HistoryItem } from '../util/HistoryStore';
+import GlobalContext from '../util/GlobalContext';
+import { common } from '@kit.AbilityKit';
 
 @Component
 export struct ResultPage {
@@ -10,48 +14,68 @@ export struct ResultPage {
   @State answers: string[] = [];
   @State category: number = 0;
   @State finalResult: string = '';
+  private scroller: Scroller = new Scroller();
+  private context = GlobalContext.getInstance().getCntx() as common.UIAbilityContext;
 
   build() {
     NavDestination() {
       Column() {
-        Text('Your Kokology Result')
-          .fontColor('#FFE082')
-          .fontSize(16)
+        Text($r('app.string.result_title'))
+          .fontColor($r('app.color.primary_text'))
+          .fontSize($r('app.float.title_font_size'))
           .fontWeight(FontWeight.Bolder)
-          .margin({ top: 6 })
+          .margin({ top: 30 })
 
-        Text(categories[this.category])
-          .fontColor('#90CAF9')
-          .fontSize(12)
-          .margin({ top: 10 })
-
-        Text(this.finalResult)
-          .fontColor('#EEEEEE')
-          .fontSize(9)
-          .margin({ top: 12, bottom: 10 })
-          .width('80%')
+        Text(categoryNames[this.category])
+          .fontColor($r('app.color.secondary_text'))
+          .fontSize($r('app.float.subtitle_font_size'))
+          .fontWeight(FontWeight.Bold)
+          .margin({ top: 8})
           .textAlign(TextAlign.Center)
+          .width('90%')
 
-        Button('Go to Home Page')
-          .onClick(() => {
-            this.pageStack.pushPathByName('HomePage', null);
-          })
-          .width('60%')
-          .height(30)
-          .fontSize(9)
-          .backgroundColor('#00C853')
-          .fontColor(Color.White)
-          .shadow({ radius: 6 })
+        Scroll(this.scroller) {
+          Column() {
+            Text(this.finalResult)
+              .fontColor($r('app.color.body_text'))
+              .fontSize($r('app.float.small_font_size'))
+              .margin({ top: 8, bottom: 16 })
+              .width('85%')
+              .textAlign(TextAlign.Center)
+
+            Button($r('app.string.go_home'))
+              .onClick(() => {
+                HapticFeedback.playClick();
+                this.pageStack.clear();
+                this.pageStack.pushPathByName('HomePage', null);
+              })
+              .width('50%')
+              .height($r('app.float.button_height'))
+              .fontSize($r('app.float.button_font_size'))
+              .backgroundColor($r('app.color.btn_success'))
+              .fontColor(Color.White)
+              .margin({ bottom: 20 })
+          }
+          .width('100%')
+        }
+        .layoutWeight(1)
+        .margin({ top: 10 })
+        .scrollBar(BarState.Off)
+        .focusable(true)
+        .defaultFocus(true)
       }
       .alignItems(HorizontalAlign.Center)
-      .justifyContent(FlexAlign.Center)
       .width('100%')
       .height('100%')
-      .backgroundColor('#0D0D0D')
+      .backgroundColor($r('app.color.background_black'))
     }
-    .onReady((ctx: NavDestinationContext) => {
+    .onReady(async (ctx: NavDestinationContext) => {
       this.pageStack = ctx.pathStack;
       const data = ctx.pathInfo.param as ResultParam;
+      if (!data) {
+        return;
+      }
+
       this.answers = data.answers;
       this.category = data.category;
 
@@ -82,11 +106,16 @@ export struct ResultPage {
           resultModel = new ResultModel();
       }
 
-      if (countA > countB) {
-        this.finalResult = resultModel.resultA;
-      } else {
-        this.finalResult = resultModel.resultB;
-      }
+      this.finalResult = (countA > countB) ? resultModel.resultA : resultModel.resultB;
+
+      // Archive the result
+      const historyItem: HistoryItem = {
+        id: Date.now().toString(),
+        category: this.category,
+        result: this.finalResult,
+        timestamp: Date.now()
+      };
+      await HistoryStore.addHistory(this.context, historyItem);
     })
     .hideBackButton(true)
   }

@@ -8,7 +8,6 @@ import {
   kokologyResultCategory6
 } from '../util/ResultData';
 
-
 @Observed
 export class ResultViewModel {
   private _kokologyResultCategory1: ResultModel = kokologyResultCategory1;

@@ -1,5 +1,3 @@
-> **Note:** To access all shared projects, get information about environment setup, and view other guides, please visit [Explore-In-HMOS-Wearable Index](https://github.com/Explore-In-HMOS-Wearable/hmos-index).
-
 # Kokology Game
 
 **Kokology Game** is a HarmonyOS-based wearable application that explores personality through psychological questions
@@ -14,13 +12,17 @@ This app demonstrates essential HarmonyOS features such as:
 - MVVM architecture with model & view model usage
 - Dynamic list rendering with `ForEach`
 - Custom UI for wearable devices
+- `@kit.SensorServiceKit` (Vibrator) to provide physical confirmation for interactions.
+- Digital Crown Navigation
+- History feature using `@kit.ArkData` (Preferences) to save and track user psychological insights over time.
 
 # Preview
 
 <div>
-<img src="screenshots/1.png" width="25%" />
-<img src="screenshots/2.png" width="25%" />
-<img src="screenshots/3.png" width="25%" />
+<img src="screenshots/1.png" width="24%" />
+<img src="screenshots/2.png" width="24%" />
+<img src="screenshots/3.png" width="24%" />
+<img src="screenshots/4.png" width="24%" />
 </div>
 
 # Use Cases
@@ -29,6 +31,7 @@ This app demonstrates essential HarmonyOS features such as:
 - **A/B Choice System**: Users select between two answers per question.
 - **Result Evaluation**: Final personality results are shown dynamically based on choices.
 - **Data Transfer with Models**: Safe navigation using `ResultParam` and `GameModel`.
+- **Personality Archive (History)**: Saves and tracks psychological insights locally using @kit.ArkData (Preferences), allowing users to revisit their past results.
 
 # Technology
 
@@ -39,10 +42,12 @@ This app demonstrates essential HarmonyOS features such as:
 - **Tools**: DevEco Studio 5.1.0
 - **Libraries**:
     - @kit.ArkUI
+    - @kit.SensorServiceKit'
+    - @kit.ArkData
 
 ## Required Permissions
 
-- No need permission.
+- ohos.permission.VIBRATE: Used for tactile confirmation during button interactions and selections.
 
 # Directory Structure
 
@@ -60,6 +65,7 @@ KokologyGame
 | |
 | |--- pages/
 | | |--- HomePage.ets
+| | |--- HistoryPage.ets
 | | |--- GamePage.ets
 | | |--- ResultPage.ets
 | | |--- Index.ets
@@ -67,6 +73,8 @@ KokologyGame
 | |--- util/
 | | |--- Categories.ets
 | | |--- GameData.ets
+| | |--- HapticFeedback.ets
+| | |--- HistoryService.ets
 | | |--- ResultData.ets
 | |
 | |--- resources/
@@ -79,7 +87,7 @@ KokologyGame
 
 - Huawei Watch 5
 
-# License
+# LICENSE
 
 **Kokology Game** is distributed under the terms of the MIT License.
 See the [license](/LICENSE) for more information.
